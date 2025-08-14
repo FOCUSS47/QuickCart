@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import connectDb from "./db";
-import User from "./models/user";
+import User from "@/models/user";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "quickcart-next" });
@@ -14,14 +14,14 @@ export const syncUserCreation = inngest.createFunction(
     },
     async ({event}) =>{
         const {id, first_name, last_name, email_addresses, image_url}= event.data
-        const userData={
+        const UserData={
             _id:id,
-            email:email_addresses[0].email_addresses,
+            email: email_addresses[0].email_address,
             name: first_name + ' '+ last_name,
             imageUrl: image_url 
         }
         await connectDb()
-        await User.create(userData)
+        await User.create(UserData)
          
     }
 )
@@ -35,14 +35,14 @@ export const syncUserUpdation= inngest.createFunction(
     },
     async ({event})=>{
         const {id, first_name, last_name, email_addresses, image_url}= event.data
-        const userData={
+        const UserData={
             _id:id,
-            email:email_addresses[0].email_addresses,
+            email: email_addresses[0].email_address,
             name: first_name + ' '+ last_name,
             imageUrl: image_url 
         }
         await connectDb()
-        await User.findByIdAndUpdate(id, userData)
+        await User.findByIdAndUpdate(id, UserData)
     }
 
 
